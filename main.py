@@ -1,20 +1,15 @@
-﻿# -*- coding: utf-8 -*-
-
 
 from blockchain import Blockchain
 
-if __name__ == "__main__":
-    # Blockchain құру
+def main():
     blockchain = Blockchain()
 
-    # Жаңа блоктарды қосу
-    blockchain.add_block("1-bloktyn derekteri")
-    blockchain.add_block("2-bloktyn derekteri")
+    blockchain.add_block("First block data")
+    blockchain.add_block("Second block data")
 
-    # Blockchain-ді басып шығару
-    print("Blockchain:")
-    print(blockchain)
+    print("Blockchain valid:", blockchain.is_chain_valid())
+    for block in blockchain.chain:
+        print(block)
 
-    # Blockchain-нің бүтіндігін тексеру
-    print("Blockchain durys pa:", blockchain.is_chain_valid())
-
+if __name__ == "__main__":
+    main()
