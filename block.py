@@ -1,19 +1,29 @@
-# -*- coding: utf-8 -*-
+﻿# -*- coding: utf-8 -*-
+
 import hashlib
 
 class Block:
-    def __init__(self, timestamp, previous_hash, data):
-        """Inicializaciya bloka."""
+    def __init__(self, address, timestamp, data):
+        self.address = address
         self.timestamp = timestamp
-        self.previous_hash = previous_hash
         self.data = data
-        self.hash = self.calculate_hash()
 
-    def calculate_hash(self):
-        """Vychislenie khesha dlya tekushchego bloka."""
-        block_content = f"{self.timestamp}{self.previous_hash}{self.data}".encode('utf-8')
-        return hashlib.sha256(block_content).hexdigest()
+    def is_valid(self):
+        """Bloktıñ validtiğini tekserip, jaramsız bolsa False qaytaradı."""
+        # Jaramdılıq tekserui - adresi men timestamp arqılı
+        if not self.address or not self.timestamp or not self.data:
+            return False
+        if len(self.address) != 64:  # Hash adresi bolıp 64 belgiden turadı
+            return False
+        # Qosımşa tekserwlerdi qoswğa boladı
+        return True
 
-    def __repr__(self):
-        """Predstavlenie bloka v vide stroki."""
-        return f"Block(timestamp={self.timestamp}, previous_hash={self.previous_hash}, hash={self.hash}, data={self.data})"
+    def __str__(self):
+        return f"Address: {self.address}, Timestamp: {self.timestamp}, Data: {self.data}"
+
+    @staticmethod
+    def create_hash(data):
+        """Bloktıñ xeshi (hash) funksiıası."""
+        return hashlib.sha256(data.encode('utf-8')).hexdigest()
+
+
