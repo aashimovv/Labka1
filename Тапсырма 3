@@ -72,3 +72,4 @@ if __name__ == "__main__":
 
     # Блокчейнді валидациялау
     print("Блокчейн жарамды ма?", blockchain.is_chain_valid())
+# HUI
