@@ -1,0 +1,74 @@
+import hashlib
+import time
+
+# Блок құрылымын анықтау
+class Block:
+    def __init__(self, index, timestamp, data, previous_hash):
+        self.index = index
+        self.timestamp = timestamp
+        self.data = data
+        self.previous_hash = previous_hash
+        self.hash = self.calculate_hash()
+
+    def calculate_hash(self):
+        # Блок хэші барлық деректерден есептеледі
+        block_data = f"{self.index}{self.timestamp}{self.data}{self.previous_hash}"
+        return hashlib.sha256(block_data.encode()).hexdigest()
+
+# Блокчейн құрылымын анықтау
+class Blockchain:
+    def __init__(self):
+        self.chain = [self.create_genesis_block()]
+
+    def create_genesis_block(self):
+        # Генезис блогын құру
+        return Block(0, time.time(), "Генезис блогы", "0")
+
+    def get_latest_block(self):
+        # Тізбектегі соңғы блокты алу
+        return self.chain[-1]
+
+    def add_block(self, data):
+        # Жаңа блокты қосу
+        previous_block = self.get_latest_block()
+        new_block = Block(previous_block.index + 1, time.time(), data, previous_block.hash)
+        self.chain.append(new_block)
+
+    def is_chain_valid(self):
+        # Блокчейннің тұтастығын тексеру
+        for i in range(1, len(self.chain)):
+            current_block = self.chain[i]
+            previous_block = self.chain[i - 1]
+
+            # Хэштің дұрыс есептелгенін тексеру
+            if current_block.hash != current_block.calculate_hash():
+                print(f"Блок {current_block.index} жарамсыз: Хэш қате")
+                return False
+
+            # Алдыңғы блоктың хэші дұрыс байланысқанын тексеру
+            if current_block.previous_hash != previous_block.hash:
+                print(f"Блок {current_block.index} жарамсыз: Алдыңғы хэш қате")
+                return False
+
+        return True
+
+# Блокчейнді пайдалану
+if __name__ == "__main__":
+    # Жаңа блокчейн құру
+    blockchain = Blockchain()
+
+    # Жаңа блоктар қосу
+    blockchain.add_block("Екінші блок деректері")
+    blockchain.add_block("Үшінші блок деректері")
+
+    # Блокчейнді басып шығару
+    for block in blockchain.chain:
+        print(f"Блок {block.index}:")
+        print(f" Уақыт таңбасы: {block.timestamp}")
+        print(f" Деректер: {block.data}")
+        print(f" Алдыңғы хэш: {block.previous_hash}")
+        print(f" Хэш: {block.hash}")
+        print()
+
+    # Блокчейнді валидациялау
+    print("Блокчейн жарамды ма?", blockchain.is_chain_valid())
